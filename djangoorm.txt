@@ -1,0 +1,41 @@
+关系映射
+一对一
+entry = models.OneToOneField(Entry)
+正向查询：通过wife 找 author
+	#1.获取 id 为1 的 Wife的信息
+	#2.通过 Wife 的关联属性 author 来找Author
+	wife = Wife.objects.get(id=1)
+	author = wife.author
+反向查询：通过author 找 wife
+	#1.获取 id 为14 的 Author的信息
+	#2.通过 author 的关联属性 wife 来找wife
+	author=Author.objects.get(id=14)
+	wife = author.wife
+wife 是Django通过OneToOneField在Author中默认增加的一个隐式属性
+
+一对多 外键在多
+entry = models.ForeignKey(Entry)
+1、正向查询 - 通过Book查询Publisher	
+	#查询id为1的书籍的信息 
+	#查询关联的publisher
+	book = Book.objects.get(id=1)
+	publisher = book.publisher
+2、反向查询 - 通过Publisher查询Book
+	结合 Publisher 和 Book 之间关系 ：
+	在 Publisher 中 增加了一个 book_set 属性
+	ex:
+		publisher=Publisher.objects.get(id=1)
+		books = publisher.book_set.all()
+		
+多对多 
+entry = models.ManyToManyField(Entry)
+1、正向查询-通过Author查询所有的Book
+	author = Author.objects.get(id=1)
+	books = author.book.all()
+	通过 关联属性.all() 查询所有对应数据
+
+2、反向查询-通过Book查询所有的Author
+	Django中 会在Book 实体中增加一个隐式属性 author_set
+	book = Book.objects.get(id=1)
+	authors = book.author_set.all()
+
